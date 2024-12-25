@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="album-detail">
+    <h2>{{ album.title }} - {{ album.artist }}</h2>
+    <img src="{{ album.cover_image.url }}" alt="{{ album.title }}" class="album-cover">
+
+    <h3>Songs</h3>
+    <div class="song-list">
+        {% for song in songs %}
+            <div class="song-card">
+                <!-- Full Image Background for Each Song -->
+                <div class="song-image" style="background-image: url('{{ album.cover_image.url }}');">
+                    <div class="song-info">
+                        <!-- Song details inside the image -->
+                        <h4>{{ song.song_name }}</h4>
+
+                        <!-- Audio controls for the song -->
+                        <audio id="audio_{{ song.id }}" class="song-audio" controls>
+                            <source src="{{ song.audio_file.url }}" type="audio/mp3">
+                            Your browser does not support the audio element.
+                        </audio>
+
+                        <!-- Display song duration -->
+                        <div class="song-duration" id="duration_{{ song.id }}">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+    .album-detail {
+        text-align: center;
+    }
+
+    .album-cover {
+        width: 300px;
+        height: 300px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .song-list {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+
+    .song-card {
+        text-align: center;
+        padding: 10px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .song-image {
+        width: 100%;
+        height: 200px;
+        background-size: cover;
+        background-position: center;
+        border-radius: 8px;
+        position: relative;
+    }
+
+    .song-info {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 10px;
+        border-radius: 8px;
+        text-align: left;
+    }
+
+    .song-info h4 {
+        margin-bottom: 10px;
+    }
+
+    .song-duration {
+        margin-top: 5px;
+        font-size: 12px;
+    }
+
+    hr {
+        margin: 15px 0;
+        border: 0;
+        border-top: 1px solid #ddd;
+    }
+
+    .player-bar {
+        margin-top: 30px;
+        position: relative;
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .disco-lights {
+        height: 10px;
+        background: linear-gradient(to right, #ff0000, #ff7300, #fffb00, #00ff00, #00aaff, #7a00ff, #ff00ff);
+        background-size: 200% 100%;
+        animation: disco 1s linear infinite;
+    }
+
+    @keyframes disco {
+        0% {
+            background-position: 0% 0%;
+        }
+        100% {
+            background-position: 100% 0%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let currentlyPlayingAudio = null;
+
+    // Get all audio elements with class 'song-audio'
+    const audios = document.querySelectorAll('.song-audio');
+
+    audios.forEach(audio => {
+        audio.addEventListener('play', function() {
+            // When a song is played, stop any currently playing audio
+            if (currentlyPlayingAudio && currentlyPlayingAudio !== audio) {
+                currentlyPlayingAudio.pause();  // Stop the other audio
+                currentlyPlayingAudio.currentTime = 0;  // Reset their time to the beginning
+            }
+
+            // Update the currentlyPlayingAudio to the new one
+            currentlyPlayingAudio = audio;
+        });
+    });
+
+    // Ensure only one audio plays at a time when clicked
+    audios.forEach(audio => {
+        audio.addEventListener('click', function() {
+            if (currentlyPlayingAudio && currentlyPlayingAudio !== audio) {
+                currentlyPlayingAudio.pause();  // Stop the other audio
+                currentlyPlayingAudio.currentTime = 0;  // Reset their time to the beginning
+            }
+
+            // Start the clicked audio if it's not already playing
+            if (audio.paused) {
+                audio.play();
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+<style>
+  .album-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .album-card {
+    width: 200px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .album-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .album-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+
+  .album-card h3 {
+    margin-top: 10px;
+    font-size: 16px;
+  }
+
+  .album-card a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content">
+    <h2>Your Favorite Albums</h2>
+
+    <div class="album-container">
+        {% for album in favorite_albums %}
+            <div class="album-card">
+                <a href="{% url 'album_detail' album.id %}"> <!-- Clicking album image/title takes to album detail -->
+                    <img src="{{ album.cover_image.url }}" alt="{{ album.title }}">
+                    <h3>{{ album.title }}</h3>
+                </a>
+            </div>
+        {% empty %}
+            <p>You don't have any favorite albums yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

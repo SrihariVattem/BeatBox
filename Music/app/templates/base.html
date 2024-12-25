@@ -1,0 +1,157 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beatbox Music</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #1db954;
+            padding: 10px 20px;
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-left .musical-note {
+            font-size: 30px;
+            margin-right: 15px;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .navbar-right input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .navbar-right a {
+            color: white;
+            font-size: 18px;
+            text-decoration: none;
+        }
+
+        .navbar-right a:hover {
+            text-decoration: underline;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        /* Album Container Styling */
+        .album-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 cards per row */
+            gap: 20px; /* Space between cards */
+        }
+
+        .album-card {
+            width: 100%;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth animation */
+        }
+
+        .album-card img {
+            width: 100%;
+            border-radius: 8px;
+            transition: transform 0.3s ease; /* Smooth zoom animation */
+        }
+
+        .album-card img:hover {
+            transform: scale(1.1); /* Zoom effect on the image */
+        }
+
+        .album-card:hover {
+            transform: translateY(-10px); /* Lift the card */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Add a shadow */
+        }
+
+        .album-card h3 {
+            margin: 10px 0;
+            color: #333;
+        }
+
+        button {
+            background-color: #1db954;
+            color: white;
+            padding: 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #16a34a;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .album-container {
+                grid-template-columns: repeat(2, 1fr); /* 2 cards per row on smaller screens */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .album-container {
+                grid-template-columns: repeat(1, 1fr); /* 1 card per row on very small screens */
+            }
+        }
+    </style>
+    {% block styles %}{% endblock %}
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="navbar-left">
+            <span class="musical-note">🎵</span>
+            <h2><strong>Beat Box</strong></h2>
+        </div>
+        <div class="navbar-right">
+             <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'favorite_view' %}">Favorites</a>
+            <form method="get" action="{% url 'search' %}">
+                <input type="text" placeholder="Search albums..." name="q" >
+                <button type="submit">Search</button>
+            </form>
+            {% if user.is_authenticated %}
+                <span>{{ user.username }}</span>
+                <a href="{% url 'logout' %}">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- content -->
+    {% block content %}
+    {% endblock %}
+
+</body>
+</html>
